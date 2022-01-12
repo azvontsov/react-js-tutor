@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import Counter from "./components/Counter";
+import PostForm from "./components/PostForm";
 import PostItem from "./components/PostItem";
 import PostList from "./components/PostList";
 import MyButton from "./components/UI/button/MyButton";
@@ -14,40 +15,18 @@ function App() {
     { id: 3, title: "JavaScript 3", body: "Description" },
   ]);
 
-  const [post, setPost] = useState({ title: "", body: "" });
-  const [body, setBody] = useState("");
+  const createPost = (newPost) => {
+    setPosts([...posts, newPost]);
+  };
 
-  // const bodyInputRef = useRef();
-
-  const addNewPost = (e) => {
-    e.preventDefault();
-
-    setPosts([...posts, { ...post, id: Date.now() }]);
-    setPost({ title: "", body: "" });
+  const removePost = (post) => {
+    setPosts(posts.filter((p) => p.id !== post.id));
   };
 
   return (
     <div className="App">
-      <form>
-        {/*Controlled Component */}
-        <MyInput
-          value={post.title}
-          onChange={(e) => setPost({ ...post, title: e.target.value })}
-          type="text"
-          placeholder="Post Name"
-        />
-
-        {/* Uncontrolled Component */}
-        <MyInput
-          // ref={bodyInputRef}
-          value={post.body}
-          onChange={(e) => setPost({ ...post, body: e.target.value })}
-          type="text"
-          placeholder="Post Description"
-        />
-        <MyButton onClick={addNewPost}>Create Post</MyButton>
-      </form>
-      <PostList posts={posts} title="Index of JS Posts" />
+      <PostForm create={createPost} />
+      <PostList remove={removePost} posts={posts} title="Index of JS Posts" />
     </div>
   );
 }
